@@ -1,6 +1,6 @@
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
-# kentico-onboarding-js [![travis-ci](https://travis-ci.org/HanaNavratilova/kentico-onboarding-js.svg?branch=master)](https://travis-ci.org/HanaNavratilova/kentico-onboarding-js)
+# kentico-onboarding-js [![travis-ci](https://travis-ci.org/HanaNavratilova/kentico-onboarding-js.svg?branch=master)](https://travis-ci.org/HanaNavratilova/kentico-onboarding-js) [![Maintainability](https://api.codeclimate.com/v1/badges/28a7d3a10173ba4ae5ff/maintainability)](https://codeclimate.com/github/HanaNavratilova/kentico-onboarding-js/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/28a7d3a10173ba4ae5ff/test_coverage)](https://codeclimate.com/github/HanaNavratilova/kentico-onboarding-js/test_coverage)
 
 Simple step-by-step task for Kentico Academy to learn the basics of JS, React, Redux.
 
