@@ -24,7 +24,10 @@ export class App extends React.PureComponent<IAppStateProps> {
               this.props.isInitialized && <ListWithTimer />
             }
             {
-              !this.props.isInitialized && <div className="m-auto text-center"><ScaleLoader /></div>
+              !this.props.isInitialized &&
+              <div className="m-auto text-center">
+                <ScaleLoader color={'#17a2b8'} />
+              </div>
             }
           </section>
         </div>
