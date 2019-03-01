@@ -4,6 +4,7 @@ import { IAction } from '../IAction';
 import * as ActionType from '../ActionTypes';
 import { toast } from 'react-toastify';
 import { ListItem } from '../../models/ListItem';
+import 'react-toastify/dist/ReactToastify.css';
 
 const fetchingStarts = (): IAction => ({
   type: ActionType.FetchItemsStarted,
@@ -32,17 +33,20 @@ const fetchingSucceeded = (items: ListItem[]): IAction => ({
   }
 });
 
-export const requestAllItems = () => (dispatch: Dispatch):  Promise<any> => {
-    dispatch(fetchingStarts());
+const requestAllItemsCreator = (myFetch: typeof fetch) => (dispatch: Dispatch): Promise<IAction> => {
+  dispatch(fetchingStarts());
 
-    return fetch('api/v1.0/List',  { method: 'GET' })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
+  return myFetch('api/v1.0/List', { method: 'GET' })
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      }
 
-        throw new Error();
-        })
-      .then(items => dispatch((fetchingSucceeded(items))))
-      .catch(_ => dispatch(fetchingFailed()));
+      throw new Error();
+    })
+    .then(items => dispatch(fetchingSucceeded(items)))
+    .catch(_ => dispatch(fetchingFailed()));
 };
+
+export const requestAllItems = requestAllItemsCreator(fetch);
+

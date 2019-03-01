@@ -29,4 +29,4 @@ export const store = createStore<IAppState, IAction, any, never>(
   composeEnhancers(applyMiddleware(logger, thunk))
 );
 
-store.dispatch(requestAllItems());
+store.dispatch(requestAllItems);
