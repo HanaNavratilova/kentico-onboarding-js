@@ -9,7 +9,7 @@ import { createLogger } from 'redux-logger';
 import { IAppState } from '../reducers/interfaces/IAppState';
 import { IAction } from '../actions/IAction';
 import thunk from 'redux-thunk';
-import { fetchAllItems } from '../actions/FetchActions';
+import { requestAllItems } from '../actions/fetchActions/requestAllItems';
 
 const logger = createLogger({});
 
@@ -29,4 +29,4 @@ export const store = createStore<IAppState, IAction, any, never>(
   composeEnhancers(applyMiddleware(logger, thunk))
 );
 
-store.dispatch(fetchAllItems());
+store.dispatch(requestAllItems());
