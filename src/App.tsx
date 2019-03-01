@@ -31,15 +31,13 @@ export class App extends React.PureComponent<IAppStateProps> {
             </h3>
           </div>
           <section id="app-content">
-            {
-              this.props.isInitialized && <ListWithTimer />
-            }
-            {
-              !this.props.isInitialized &&
-              <div className="m-auto text-center">
-                <ScaleLoader color={'#17a2b8'} />
-              </div>
-            }
+            {this.props.isInitialized
+              ? <ListWithTimer />
+              : (
+                <div className="m-auto text-center">
+                  <ScaleLoader color={'#17a2b8'} />
+                </div>
+              )}
           </section>
         </div>
         <footer className="footer">
