@@ -33,7 +33,7 @@ const fetchingSucceeded = (items: ListItem[]): IAction => ({
   }
 });
 
-const requestAllItemsCreator = (myFetch: typeof fetch) => (dispatch: Dispatch): Promise<IAction> => {
+export const requestAllItemsCreator = (myFetch: (path: string, options?: RequestInit) => Promise<Response>) => (dispatch: Dispatch): Promise<IAction> => {
   dispatch(fetchingStarts());
 
   return myFetch('api/v1.0/List', { method: 'GET' })
