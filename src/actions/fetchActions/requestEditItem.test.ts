@@ -5,7 +5,7 @@ import * as ActionType from '../ActionTypes';
 import { IAction } from '../IAction';
 
 describe('requestEditItem', () => {
-  it('dispatches fetchingStarts and after response was ok, dispatches fetchingSucceeded with items as its parameter', async () => {
+  it('dispatches fetchingStarts and after response was ok, dispatches fetchingSucceeded with item as its parameter', async () => {
 
     const item = new ListItem({
       id: '3970a0db-c877-49e1-b4d0-75e931384289',
