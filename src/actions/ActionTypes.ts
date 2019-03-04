@@ -8,3 +8,7 @@ export const SetLastRenderTime = 'SET_LAST_RENDER_TIME';
 export const FetchItemsStarted = 'FETCH_ITEMS_STARTED';
 export const FetchItemsSucceeded = 'FETCH_ITEMS_SUCCEEDED';
 export const FetchItemsFailed = 'FETCH_ITEMS_FAILED';
+
+export const FetchAddItemStarted = 'FETCH_ADD_ITEM_STARTED';
+export const FetchAddItemSucceeded = 'FETCH_ADD_ITEM_SUCCEEDED';
+export const FetchAddItemFailed = 'FETCH_ADD_ITEM_FAILED';

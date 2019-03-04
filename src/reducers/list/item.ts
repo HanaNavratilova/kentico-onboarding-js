@@ -4,11 +4,9 @@ import { IAction } from '../../actions/IAction';
 
 export const item = (state: ListItem = new ListItem(), action: IAction): ListItem => {
   switch (action.type) {
-    case ActionType.AddItem:
+    case ActionType.FetchAddItemSucceeded:
       return new ListItem({
-        ...action.payload,
-        isActive: false,
-        lastUpdateTime: action.payload.creationTime
+        ...action.payload
       });
 
     case ActionType.ToggleItem:
