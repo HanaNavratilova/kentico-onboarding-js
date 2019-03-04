@@ -1,12 +1,8 @@
 import * as ActionType from './ActionTypes';
-import { guid } from '../utils/guid';
-import { addItemCreator } from './addItemCreator';
 import { IAction } from './IAction';
 import { getTime } from '../utils/getTime';
 import { saveItemCreator } from './saveItemCreator';
 import { ListSorting } from '../constants/ListSorting';
-
-export const addItem = addItemCreator(guid, getTime);
 
 export const saveItem = saveItemCreator(getTime);
 
