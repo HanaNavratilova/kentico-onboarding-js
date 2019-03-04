@@ -13,7 +13,7 @@ const fetchingFailed = (): IAction => ({
   payload: {}
 });
 
-const fetchingSucceeded = (id: Uuid): IAction => ({
+export const fetchingSucceeded = (id: Uuid): IAction => ({
   type: ActionType.FetchDeleteItemSucceeded,
   payload: {
     id

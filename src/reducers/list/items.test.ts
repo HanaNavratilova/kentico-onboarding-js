@@ -3,15 +3,23 @@ import { Map } from 'immutable';
 import { items as listReducer } from './items';
 import { ListItem } from '../../models/ListItem';
 
-import { addItemCreator } from '../../actions/addItemCreator';
-
-import { saveItemCreator } from '../../actions/saveItemCreator';
+import { fetchingSucceeded as deleteItemAction } from '../../actions/fetchActions/requestDeleteItem';
+import { fetchingSucceeded as addItemAction } from '../../actions/fetchActions/requestAddItem';
+import { fetchingSucceeded as saveItemAction } from '../../actions/fetchActions/requestEditItem';
 
 import {
-  deleteItem,
   toggleItem
 } from '../../actions/ListActions';
 import { IAction } from '../../actions/IAction';
+
+const createListItem = (id: Uuid, text: string, isActive: boolean, creationTime: string, lastUpdateTime: string) =>
+  ({
+    id,
+    text,
+    isActive,
+    creationTime,
+    lastUpdateTime
+  } as ListItem);
 
 const createItem = (id: Uuid, text: string, isActive: boolean = false, creationTime: string = '0005-12-17 20:30:00', lastUpdateTime: string = creationTime) =>
   [
@@ -52,9 +60,9 @@ describe('ListReducer', () => {
     const expectedList = Map<Uuid, ListItem>([
       createItem(id, text, false, time)
     ]);
-    const addItem = addItemCreator(() => id, () => time);
 
-    const action = addItem(text);
+    const action = addItemAction(createListItem(id, text, false, time, time));
+
     const actualList = listReducer(undefined, action);
 
     expect(actualList).toEqual(expectedList);
@@ -77,10 +85,7 @@ describe('ListReducer', () => {
       item1,
       createItem(id2, newText, false, creationTime, lastUpdateTime),
     ]);
-
-    const saveItem = saveItemCreator(() => lastUpdateTime);
-
-    const action = saveItem(id2, newText);
+    const action = saveItemAction(createListItem(id2, newText, false, creationTime, lastUpdateTime));
     const actualList = listReducer(defaultList, action);
 
     expect(actualList).toEqual(expectedList);
@@ -128,7 +133,7 @@ describe('ListReducer', () => {
       item3
     ]);
 
-    const action = deleteItem(id2);
+    const action = deleteItemAction(id2);
     const actualList = listReducer(defaultList, action);
 
     expect(actualList).toEqual(expectedList);
@@ -158,9 +163,7 @@ describe('ListReducer', () => {
     const action1 = toggleItem(id);
     const actualList1 = listReducer(defaultList, action1);
 
-    const saveItem = saveItemCreator(() => lastUpdateTime);
-
-    const action2 = saveItem(id, newText);
+    const action2 = saveItemAction(createListItem(id, newText, false, creationTime, lastUpdateTime));
     const actualList2 = listReducer(actualList1, action2);
 
     expect(actualList1).toEqual(expectedList1);

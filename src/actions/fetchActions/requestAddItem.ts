@@ -15,7 +15,7 @@ const fetchingFailed = (): IAction => ({
   payload: {}
 });
 
-const fetchingSucceeded = (item: ListItem): IAction => ({
+export const fetchingSucceeded = (item: ListItem): IAction => ({
   type: ActionType.FetchAddItemSucceeded,
   payload: {
     ...item
