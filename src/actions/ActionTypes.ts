@@ -1,6 +1,5 @@
 export const ToggleItem = 'TOGGLE_ITEM';
 export const SetListSorting = 'SET_LIST_SORTING';
-export const SetLastRenderTime = 'SET_LAST_RENDER_TIME';
 
 export const FetchItemsStarted = 'FETCH_ITEMS_STARTED';
 export const FetchItemsSucceeded = 'FETCH_ITEMS_SUCCEEDED';
