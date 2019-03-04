@@ -12,3 +12,7 @@ export const FetchItemsFailed = 'FETCH_ITEMS_FAILED';
 export const FetchAddItemStarted = 'FETCH_ADD_ITEM_STARTED';
 export const FetchAddItemSucceeded = 'FETCH_ADD_ITEM_SUCCEEDED';
 export const FetchAddItemFailed = 'FETCH_ADD_ITEM_FAILED';
+
+export const FetchEditItemStarted = 'FETCH_EDIT_ITEM_STARTED';
+export const FetchEditItemSucceeded = 'FETCH_EDIT_ITEM_SUCCEEDED';
+export const FetchEditItemFailed = 'FETCH_EDIT_ITEM_FAILED';

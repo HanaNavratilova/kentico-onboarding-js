@@ -12,8 +12,8 @@ export const item = (state: ListItem = new ListItem(), action: IAction): ListIte
     case ActionType.ToggleItem:
       return state.with({isActive: !state.isActive});
 
-    case ActionType.SaveItem: {
-      return state.with({text: action.payload.text, isActive: false, lastUpdateTime: action.payload.updateTime});
+    case ActionType.FetchEditItemSucceeded: {
+      return state.with({text: action.payload.text, isActive: false, lastUpdateTime: action.payload.lastUpdateTime});
     }
 
     case ActionType.FetchItemsSucceeded:
