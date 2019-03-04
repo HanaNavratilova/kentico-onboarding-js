@@ -16,7 +16,7 @@ export const items = (state = Map<Uuid, ListItem>(), action: IAction): Map<Uuid,
       return state.set(action.payload.id, editedItem);
     }
 
-    case ActionType.DeleteItem:
+    case ActionType.FetchDeleteItemSucceeded:
       return state.delete(action.payload.id);
 
     case ActionType.FetchItemsSucceeded:

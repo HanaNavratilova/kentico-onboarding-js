@@ -16,3 +16,7 @@ export const FetchAddItemFailed = 'FETCH_ADD_ITEM_FAILED';
 export const FetchEditItemStarted = 'FETCH_EDIT_ITEM_STARTED';
 export const FetchEditItemSucceeded = 'FETCH_EDIT_ITEM_SUCCEEDED';
 export const FetchEditItemFailed = 'FETCH_EDIT_ITEM_FAILED';
+
+export const FetchDeleteItemStarted = 'FETCH_DELETE_ITEM_STARTED';
+export const FetchDeleteItemSucceeded = 'FETCH_DELETE_ITEM_SUCCEEDED';
+export const FetchDeleteItemFailed = 'FETCH_DELETE_ITEM_FAILED';
