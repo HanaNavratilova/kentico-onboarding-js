@@ -9,13 +9,6 @@ export const toggleItem = (id: Uuid): IAction => ({
   }
 });
 
-export const deleteItem = (id: Uuid): IAction => ({
-  type: ActionType.DeleteItem,
-  payload: {
-    id
-  }
-});
-
 export const setListSorting = (listView: ListSorting): IAction => ({
   type: ActionType.SetListSorting,
   payload: {
