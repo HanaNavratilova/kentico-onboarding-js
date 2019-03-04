@@ -2,14 +2,10 @@ import './sticky-footer.css';
 import * as React from 'react';
 import { PeriodicTicker } from './components/PeriodicTicker';
 import { ListWithTimer } from './components/ListWithTimer';
-import { ScaleLoader } from 'react-spinners';
 import { ToastContainer } from 'react-toastify';
+import { Loader } from './containers/Loader';
 
-export interface IAppStateProps {
-  readonly isInitialized: boolean;
-}
-
-export class App extends React.PureComponent<IAppStateProps> {
+export class App extends React.PureComponent {
   render(): JSX.Element {
     return (
       <div>
@@ -31,13 +27,9 @@ export class App extends React.PureComponent<IAppStateProps> {
             </h3>
           </div>
           <section id="app-content">
-            {this.props.isInitialized
-              ? <ListWithTimer />
-              : (
-                <div className="m-auto text-center">
-                  <ScaleLoader color={'#17a2b8'} />
-                </div>
-              )}
+            <Loader>
+              <ListWithTimer />
+            </Loader>
           </section>
         </div>
         <footer className="footer">
