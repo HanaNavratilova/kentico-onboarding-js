@@ -5,6 +5,7 @@ import { ActiveItem } from './ActiveItem';
 import { InactiveItem } from './InactiveItem';
 
 import { IListItem, ListItem } from '../models/ListItem';
+import { IAction } from '../actions/IAction';
 
 export interface IItemStateProps {
   readonly item: IListItem;
@@ -13,7 +14,7 @@ export interface IItemStateProps {
 
 export interface IItemDispatchProps {
   readonly onSaveItem: (text: string) => void;
-  readonly onDeleteItem: () => void;
+  readonly onDeleteItem: () => Promise<IAction>;
   readonly onToggleItem: () => void;
 }
 

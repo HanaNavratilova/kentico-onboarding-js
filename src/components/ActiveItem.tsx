@@ -3,17 +3,22 @@ import * as PropTypes from 'prop-types';
 
 import { ListItem, IListItem } from '../models/ListItem';
 import { isTextEmpty } from '../utils/isTextEmpty';
+import { IAction } from '../actions/IAction';
+import { createErrorPopup } from '../utils/popups';
+import { SyncLoader } from 'react-spinners';
 
 interface IActiveItemProps {
   readonly item: IListItem;
   readonly timeToRender: string;
   readonly onSaveItem: (text: string) => void;
   readonly onCancelItem: () => void;
-  readonly onDeleteItem: () => void;
+  readonly onDeleteItem: () => Promise<IAction>;
 }
 
 interface IActiveItemState {
   readonly text: string;
+  readonly isProcessingRequest: boolean;
+  readonly deletionFailed: boolean;
 }
 
 export class ActiveItem extends React.PureComponent<IActiveItemProps, IActiveItemState> {
@@ -28,7 +33,9 @@ export class ActiveItem extends React.PureComponent<IActiveItemProps, IActiveIte
   };
 
   state = {
-    text: this.props.item.text
+    text: this.props.item.text,
+    isProcessingRequest: false,
+    deletionFailed: false,
   };
 
   _saveInputValue = () => this.props.onSaveItem(this.state.text);
@@ -36,6 +43,15 @@ export class ActiveItem extends React.PureComponent<IActiveItemProps, IActiveIte
   _storeInputValue = (event: React.FormEvent<HTMLInputElement>) => {
     const text = event.currentTarget.value;
     this.setState(() => ({text}));
+  };
+
+  _deleteItem = () => {
+    this.setState(() => ({isProcessingRequest: true}));
+    this.props.onDeleteItem()
+      .catch(() => {
+        createErrorPopup('Couldn\'t delete item.');
+        this.setState(() => ({isProcessingRequest: false, deletionFailed: true}));
+      });
   };
 
   render(): JSX.Element {
@@ -63,7 +79,7 @@ export class ActiveItem extends React.PureComponent<IActiveItemProps, IActiveIte
                 className="btn btn-info"
                 type="submit"
                 onClick={this._saveInputValue}
-                disabled={!textIsValid}
+                disabled={!textIsValid || this.state.isProcessingRequest}
                 title={title}
               >
                 Save
@@ -72,18 +88,30 @@ export class ActiveItem extends React.PureComponent<IActiveItemProps, IActiveIte
                 className="btn btn-light border border-secondary"
                 type="submit"
                 onClick={this.props.onCancelItem}
+                disabled={this.state.isProcessingRequest}
               >
                 Cancel
               </button>
               <button
                 className="btn btn-danger"
                 type="submit"
-                onClick={this.props.onDeleteItem}
+                onClick={this._deleteItem}
+                disabled={this.state.isProcessingRequest}
               >
                 Delete
               </button>
             </div>
           </div>
+          {this.state.isProcessingRequest &&
+            <div className="pt-2">
+              <SyncLoader color={'#17a2b8'} size={10}/>
+            </div>
+          }
+          {this.state.deletionFailed &&
+          <span className="py-1 pt-2 font-weight-bold text-danger">
+            Deletion failed
+          </span>
+          }
         </div>
       </div>
     );
