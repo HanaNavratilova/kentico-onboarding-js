@@ -96,7 +96,7 @@ export class ActiveItem extends React.PureComponent<IActiveItemProps, IActiveIte
                 className="btn btn-info"
                 type="submit"
                 onClick={this._saveInputValue}
-                disabled={!textIsValid || this.state.isProcessingRequest}
+                disabled={!textIsValid || this.state.isProcessingRequest || this.state.deletionFailed}
                 title={title}
               >
                 Save
