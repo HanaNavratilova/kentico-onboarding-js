@@ -12,6 +12,7 @@
     "prop-types": "^15.6.2",
     "react": "^16.8.3",
     "react-dom": "^16.4.1",
+    "react-icons": "^3.4.0",
     "react-redux": "^5.0.7",
     "react-scripts-ts": "^3.1.0",
     "react-set-state-usage": "^2.0.1",
