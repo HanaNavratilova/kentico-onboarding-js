@@ -46,7 +46,7 @@ export class ActiveItem extends React.PureComponent<IActiveItemProps, IActiveIte
   };
 
   _deleteItem = () => {
-    this.setState(() => ({isProcessingRequest: true}));
+    this.setState(() => ({isProcessingRequest: true, deletionFailed: false}));
     this.props.onDeleteItem()
       .catch(() => {
         createErrorPopup('Couldn\'t delete item.');
