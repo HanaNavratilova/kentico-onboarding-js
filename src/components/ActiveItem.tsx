@@ -10,7 +10,7 @@ import { SyncLoader } from 'react-spinners';
 interface IActiveItemProps {
   readonly item: IListItem;
   readonly timeToRender: string;
-  readonly onSaveItem: (text: string) => void;
+  readonly onSaveItem: (text: string) => Promise<IAction>;
   readonly onCancelItem: () => void;
   readonly onDeleteItem: () => Promise<IAction>;
 }
@@ -19,6 +19,7 @@ interface IActiveItemState {
   readonly text: string;
   readonly isProcessingRequest: boolean;
   readonly deletionFailed: boolean;
+  readonly savingFailed: boolean;
 }
 
 export class ActiveItem extends React.PureComponent<IActiveItemProps, IActiveItemState> {
@@ -36,9 +37,18 @@ export class ActiveItem extends React.PureComponent<IActiveItemProps, IActiveIte
     text: this.props.item.text,
     isProcessingRequest: false,
     deletionFailed: false,
+    savingFailed: false,
   };
 
-  _saveInputValue = () => this.props.onSaveItem(this.state.text);
+  _saveInputValue = () => {
+    this.setState(() => ({isProcessingRequest: true, savingFailed: false, deletionFailed: false}));
+    this.props.onSaveItem(this.state.text)
+      .then(() => this.setState(() => ({isProcessingRequest: false, savingFailed: false})))
+      .catch(() => {
+        createErrorPopup('Couldn\'t save item.');
+        this.setState(() => ({isProcessingRequest: false, savingFailed: true}));
+      });
+  };
 
   _storeInputValue = (event: React.FormEvent<HTMLInputElement>) => {
     const text = event.currentTarget.value;
@@ -46,7 +56,7 @@ export class ActiveItem extends React.PureComponent<IActiveItemProps, IActiveIte
   };
 
   _deleteItem = () => {
-    this.setState(() => ({isProcessingRequest: true, deletionFailed: false}));
+    this.setState(() => ({isProcessingRequest: true, deletionFailed: false, savingFailed: false}));
     this.props.onDeleteItem()
       .catch(() => {
         createErrorPopup('Couldn\'t delete item.');
@@ -57,6 +67,13 @@ export class ActiveItem extends React.PureComponent<IActiveItemProps, IActiveIte
   render(): JSX.Element {
     const textIsValid = isTextEmpty(this.state.text);
     const title = textIsValid ? undefined : 'You can\'t save an empty input :(';
+    const errorMessage = this.state.deletionFailed
+      ? 'Deletion failed.'
+      : (
+        this.state.savingFailed
+          ? 'Saving failed.'
+          : undefined
+      );
 
     return (
       <div className="list-group-item list-group-item-action">
@@ -96,7 +113,7 @@ export class ActiveItem extends React.PureComponent<IActiveItemProps, IActiveIte
                 className="btn btn-danger"
                 type="submit"
                 onClick={this._deleteItem}
-                disabled={this.state.isProcessingRequest}
+                disabled={this.state.isProcessingRequest || this.state.savingFailed}
               >
                 Delete
               </button>
@@ -107,9 +124,9 @@ export class ActiveItem extends React.PureComponent<IActiveItemProps, IActiveIte
               <SyncLoader color={'#17a2b8'} size={10}/>
             </div>
           }
-          {this.state.deletionFailed &&
+          {(this.state.deletionFailed || this.state.savingFailed) &&
           <span className="py-1 pt-2 font-weight-bold text-danger">
-            Deletion failed
+            {errorMessage}
           </span>
           }
         </div>
