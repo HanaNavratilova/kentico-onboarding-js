@@ -4,6 +4,7 @@ import { IAction } from '../actions/IAction';
 import { createErrorPopup } from '../utils/popups';
 import { FaUndo } from 'react-icons/fa';
 import { IconContext } from 'react-icons';
+import { color } from '../constants/color';
 
 export interface ILoaderStateProps {
   readonly isInitialized: boolean;
@@ -46,8 +47,6 @@ export class Loader extends React.PureComponent<ILoaderProps, ILoaderState> {
   };
 
   render(): JSX.Element {
-    const color = '#17a2b8';
-
     return (
       <div className="m-auto text-center">
         {this.state.loadingFailed
