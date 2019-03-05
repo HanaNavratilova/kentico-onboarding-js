@@ -6,6 +6,7 @@ import { isTextEmpty } from '../utils/isTextEmpty';
 import { IAction } from '../actions/IAction';
 import { createErrorPopup } from '../utils/popups';
 import { SyncLoader } from 'react-spinners';
+import { color } from '../constants/color';
 
 interface IActiveItemProps {
   readonly item: IListItem;
@@ -121,7 +122,7 @@ export class ActiveItem extends React.PureComponent<IActiveItemProps, IActiveIte
           </div>
           {this.state.isProcessingRequest &&
             <div className="pt-2">
-              <SyncLoader color={'#17a2b8'} size={10}/>
+              <SyncLoader color={color} size={10}/>
             </div>
           }
           {(this.state.deletionFailed || this.state.savingFailed) &&
