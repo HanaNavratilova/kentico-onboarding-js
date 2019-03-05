@@ -3,6 +3,7 @@ import * as PropTypes from 'prop-types';
 import { isTextEmpty } from '../utils/isTextEmpty';
 import { IAction } from '../actions/IAction';
 import { createErrorPopup } from '../utils/popups';
+import { SyncLoader } from 'react-spinners';
 
 export interface IAddItemDispatchProps {
   readonly onAddItem: (text: string) => Promise<IAction>;
@@ -12,6 +13,7 @@ export type IAddItemProps = IAddItemDispatchProps;
 
 interface IAddItemState {
   readonly text: string;
+  readonly isProcessingRequest: boolean;
   readonly addingFailed: boolean;
 }
 
@@ -24,15 +26,17 @@ export class AddItem extends React.PureComponent<IAddItemProps, IAddItemState> {
 
   state = {
     text: '',
+    isProcessingRequest: false,
     addingFailed: false
   };
 
   _addNewItem = () => {
+    this.setState(() => ({isProcessingRequest: true, addingFailed: false}));
     this.props.onAddItem(this.state.text)
-      .then(() => this.setState(() => ({text: '', addingFailed: false})))
+      .then(() => this.setState(() => ({text: '', addingFailed: false, isProcessingRequest: false})))
       .catch(() => {
         createErrorPopup('Adding failed!');
-        this.setState(() => ({addingFailed: true}));
+        this.setState(() => ({addingFailed: true, isProcessingRequest: false}));
       });
   };
 
@@ -60,7 +64,7 @@ export class AddItem extends React.PureComponent<IAddItemProps, IAddItemState> {
                 className="btn btn-info"
                 type="submit"
                 onClick={this._addNewItem}
-                disabled={!isTextValid}
+                disabled={!isTextValid || this.state.isProcessingRequest}
                 data-toggle="tooltip"
                 data-placement="top"
                 title={title}
@@ -69,6 +73,11 @@ export class AddItem extends React.PureComponent<IAddItemProps, IAddItemState> {
               </button>
           </div>
         </div>
+        {this.state.isProcessingRequest &&
+        <div className="pt-2">
+          <SyncLoader color={'#17a2b8'} size={10}/>
+        </div>
+        }
         {this.state.addingFailed &&
         <span className="py-1 pt-2 font-weight-bold text-danger">
           Adding failed, please try it again.
