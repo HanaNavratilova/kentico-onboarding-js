@@ -3,7 +3,7 @@ import { TimerConsumer } from './Timer';
 import { List } from '../containers/List';
 
 
-export const ListWithTimer: React.StatelessComponent = () => (
+export const ListWithTimer: React.FunctionComponent = () => (
 <TimerConsumer>
   {({lastRenderTime, refreshRenderTime}) => (
     <List
