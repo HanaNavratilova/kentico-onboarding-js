@@ -9,11 +9,13 @@
     "immutable": "^3.8.2",
     "isomorphic-fetch": "^2.2.1",
     "memoizee": "^0.4.12",
+    "moment": "^2.22.2",
     "prop-types": "^15.6.2",
     "react": "^16.8.3",
     "react-dom": "^16.4.1",
     "react-icons": "^3.4.0",
     "react-redux": "^5.0.7",
+    "react-toastify": "^4.5.2",
     "react-scripts-ts": "^3.1.0",
     "react-set-state-usage": "^2.0.1",
     "react-spinners": "^0.5.1",
@@ -50,8 +52,6 @@
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.9.1",
     "eslint-plugin-react-functional-set-state": "^1.2.1",
-    "moment": "^2.22.2",
-    "react-toastify": "^4.5.2",
     "typescript": "^3.3.3333"
   },
   "proxy": "http://localhost:59417/"
