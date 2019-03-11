@@ -1,5 +1,5 @@
-import * as ActionType from '../actions/ActionTypes';
-import { IAction } from '../actions/IAction';
+import * as ActionType from '../../actions/ActionTypes';
+import { IAction } from '../../actions/IAction';
 
 export const isInitialized = (state = false, action: IAction): boolean => {
   switch (action.type) {
