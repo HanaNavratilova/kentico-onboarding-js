@@ -7,7 +7,8 @@ import {
 import { IAppState } from '../reducers/interfaces/IAppState';
 
 const mapStateToProps = ({list}: IAppState): IPopupsProps => ({
-  newItemStatus: list.newItem.status
+  newItemStatus: list.newItem.status,
+  listStatus: list.listStatus,
 });
 
 export const Popups: React.ComponentClass = connect(mapStateToProps)(PopupsComponent);

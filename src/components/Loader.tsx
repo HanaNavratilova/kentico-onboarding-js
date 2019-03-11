@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { ScaleLoader } from 'react-spinners';
-import { IAction } from '../actions/IAction';
-import { createErrorPopup } from '../utils/popups';
 import { FaUndo } from 'react-icons/fa';
 import { IconContext } from 'react-icons';
 import { color } from '../constants/color';
+import * as PropTypes from 'prop-types';
+import { getListStatusArray, ListStatus } from '../reducers/interfaces/ListStatus';
 
 export interface ILoaderStateProps {
-  readonly isInitialized: boolean;
+  readonly listStatus: ListStatus;
 }
 
 export interface ILoaderDispatchProps {
-  readonly onLoaderDidMount: () => Promise<IAction>;
+  readonly onLoaderDidMount: () => void;
 }
 
 interface ILoaderOwnProps {
@@ -20,21 +20,16 @@ interface ILoaderOwnProps {
 
 type ILoaderProps = ILoaderStateProps & ILoaderDispatchProps & ILoaderOwnProps;
 
-interface ILoaderState {
-  readonly loadingFailed: boolean;
-}
+export class Loader extends React.PureComponent<ILoaderProps> {
+  static displayName = 'Loader';
 
-export class Loader extends React.PureComponent<ILoaderProps, ILoaderState> {
-  state = {
-    loadingFailed: false,
+  static propTypes = {
+    listStatus: PropTypes.oneOf(getListStatusArray()).isRequired,
+    onLoaderDidMount: PropTypes.func.isRequired
   };
 
   _loadItems = () => {
-    this.props.onLoaderDidMount()
-      .catch(_ => {
-        createErrorPopup('Loading of all items failed!');
-        this.setState((prevState) => ({loadingFailed: !prevState.loadingFailed}));
-      });
+    this.props.onLoaderDidMount();
   };
 
   componentDidMount(): void {
@@ -42,23 +37,26 @@ export class Loader extends React.PureComponent<ILoaderProps, ILoaderState> {
   }
 
   _startLoadingItems = () => {
-    this.setState((prevState) => ({loadingFailed: !prevState.loadingFailed}));
     this._loadItems();
   };
 
   render(): JSX.Element {
+    const loadingFailed = this.props.listStatus === ListStatus.InitializationFailed;
+    const isInitialized = this.props.listStatus === ListStatus.IsInitialized;
+    const isBeingInitialized = this.props.listStatus === ListStatus.IsBeingInitialized;
+
     return (
       <div className="m-auto text-center">
-        {this.state.loadingFailed
-          ? (
-            <IconContext.Provider value={{color, size: '2em'}}>
-              <FaUndo onClick={this._startLoadingItems} />
-            </IconContext.Provider>
-          )
-          : (this.props.isInitialized
-              ? this.props.children
-              : <ScaleLoader color={color} />
-          )
+        {loadingFailed &&
+        <IconContext.Provider value={{color, size: '2em'}}>
+          <FaUndo onClick={this._startLoadingItems} />
+        </IconContext.Provider>
+        }
+        {isBeingInitialized &&
+        <ScaleLoader color={color} />
+        }
+        {isInitialized &&
+        this.props.children
         }
       </div>
     );

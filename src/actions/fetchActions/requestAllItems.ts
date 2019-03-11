@@ -1,4 +1,3 @@
-import * as fetch from 'isomorphic-fetch';
 import { Dispatch } from 'redux';
 import { IAction } from '../IAction';
 import * as ActionType from '../ActionTypes';
@@ -22,24 +21,20 @@ const fetchingSucceeded = (items: ListItem[]): IAction => ({
   }
 });
 
-export const requestAllItemsCreator = (myFetch: (path: string, options?: RequestInit) => Promise<Response>) => (dispatch: Dispatch): Promise<IAction> => {
-  dispatch(fetchingStarts());
+interface IRequestAllItemsCreatorDependency {
+  readonly fetchAllItems: () => Promise<ListItem[]>;
+}
 
-  return myFetch('api/v1.0/List', {method: 'GET'})
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      }
+export const requestAllItemsCreator = (dependency: IRequestAllItemsCreatorDependency) =>
+  async (dispatch: Dispatch): Promise<IAction> => {
+    dispatch(fetchingStarts());
 
-      throw new Error();
-    })
-    .then(items => dispatch(fetchingSucceeded(items)))
-    .catch(_ => {
-        dispatch(fetchingFailed());
-        throw new Error();
-      }
-    );
-};
+    try {
+      const items = await dependency.fetchAllItems();
 
-export const requestAllItems = requestAllItemsCreator(fetch);
+      return dispatch(fetchingSucceeded(items));
+    } catch (error) {
+      return dispatch(fetchingFailed());
+    }
+  };
 

@@ -21,19 +21,16 @@ describe('requestAllItems', () => {
       createItem('b0e9856e-bb17-4c0b-b65f-f5a43e81617c', 'item2')
     ];
 
-
     const expected: IAction[] = [
       { type: ActionType.FetchItemsStarted, payload: {}},
       { type: ActionType.FetchItemsSucceeded, payload: { items } }
     ];
 
-    const response = { json: () => Promise.resolve(items), ok: true };
-
-    const fetch = () => Promise.resolve( response );
+    const fetch = () => Promise.resolve(items);
 
     const dispatch = jest.fn();
 
-    await requestAllItemsCreator(fetch as any)(dispatch);
+    await requestAllItemsCreator({fetchAllItems: fetch})(dispatch);
 
     expect(dispatch.mock.calls[0][0]).toEqual(expected[0]);
     expect(dispatch.mock.calls[1][0]).toEqual(expected[1]);
@@ -46,39 +43,12 @@ describe('requestAllItems', () => {
       { type: ActionType.FetchItemsFailed, payload: { } }
     ];
 
-    const response = { ok: false };
-
-    const fetch = () => Promise.resolve( response );
+    const fetch = () => Promise.reject();
 
     const dispatch = jest.fn();
 
-    let errorWasThrown = false;
+    await requestAllItemsCreator(fetch as any)(dispatch);
 
-    await requestAllItemsCreator(fetch as any)(dispatch)
-      .catch(_ => {errorWasThrown = true; });
-
-    expect(errorWasThrown).toBeTruthy();
-    expect(dispatch.mock.calls[0][0]).toEqual(expected[0]);
-    expect(dispatch.mock.calls[1][0]).toEqual(expected[1]);
-
-  });
-
-  it('dispatches fetchingStarts and catch an error, dispatches fetchingFailed and throw an error', async () => {
-    const expected: IAction[] = [
-      { type: ActionType.FetchItemsStarted, payload: {}},
-      { type: ActionType.FetchItemsFailed, payload: { } }
-    ];
-
-    const fetch = () => new Promise( () => { throw new Error(); });
-
-    const dispatch = jest.fn();
-
-    let errorWasThrown = false;
-
-    await requestAllItemsCreator(fetch as any)(dispatch)
-      .catch(_ => {errorWasThrown = true; });
-
-    expect(errorWasThrown).toBeTruthy();
     expect(dispatch.mock.calls[0][0]).toEqual(expected[0]);
     expect(dispatch.mock.calls[1][0]).toEqual(expected[1]);
 

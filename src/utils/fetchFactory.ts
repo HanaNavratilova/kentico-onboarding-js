@@ -12,3 +12,14 @@ export const storeItem = (itemText: string): Promise<ListItem> =>
 
     throw new Error();
   });
+
+
+export const fetchItems = (): Promise <ListItem[]> =>
+  fetch('api/v1.0/List', {method: 'GET'})
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      }
+
+      throw new Error();
+    });
