@@ -5,6 +5,7 @@ import { ItemProperties } from './ItemProperties';
 
 export interface IListState {
   items: Map<Uuid, ListItem>;
+  isInitialized: boolean;
   sorting: ListSorting;
   newItem: ItemProperties;
 }

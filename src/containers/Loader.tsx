@@ -11,8 +11,8 @@ import { requestAllItems } from '../actions/fetchActions/requestAllItems';
 import { ThunkDispatch } from 'redux-thunk';
 import { IAction } from '../actions/IAction';
 
-const mapStateToProps = (state: IAppState): ILoaderStateProps => ({
-  isInitialized: state.isInitialized
+const mapStateToProps = ({ list }: IAppState): ILoaderStateProps => ({
+  isInitialized: list.isInitialized
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<IAppState, never, IAction>): ILoaderDispatchProps => ({
