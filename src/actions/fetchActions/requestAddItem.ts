@@ -1,13 +1,14 @@
-import * as fetch from 'isomorphic-fetch';
 import { Dispatch } from 'redux';
 import { IAction } from '../IAction';
 import * as ActionType from '../ActionTypes';
 
 import { ListItem } from '../../models/ListItem';
 
-const fetchingStarts = (): IAction => ({
+const fetchingStarts = (itemText: string): IAction => ({
   type: ActionType.FetchAddItemStarted,
-  payload: {}
+  payload: {
+    text: itemText
+  }
 });
 
 const fetchingFailed = (): IAction => ({
@@ -22,30 +23,22 @@ export const fetchingSucceeded = (item: ListItem): IAction => ({
   }
 });
 
-export const requestAddItemCreator = (myFetch: (path: string, options?: RequestInit) => Promise<Response>) => (itemText: string) => (dispatch: Dispatch): Promise<IAction> => {
-  dispatch(fetchingStarts());
+interface IAddItemCreatorDependency {
+  readonly fetchAddItem: (itemText: string) => Promise<ListItem>;
+}
 
-  return myFetch(
-    'api/v1.0/List',
-    {
-      method: 'POST',
-      body: JSON.stringify({text: itemText}),
-      headers: {'Content-Type': 'application/json'}
-    })
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      }
+export const requestAddItemCreator = (dependency: IAddItemCreatorDependency) => (itemText: string) =>
+  async (dispatch: Dispatch): Promise<IAction> => {
+    dispatch(fetchingStarts(itemText));
 
-      throw new Error();
-    })
-    .then(item => dispatch(fetchingSucceeded(item)))
-    .catch(_ => {
-        dispatch(fetchingFailed());
-        throw new Error();
-      }
-    );
-};
+    try {
+      const item = await dependency.fetchAddItem(itemText);
 
-export const requestAddItem = requestAddItemCreator(fetch);
+      return dispatch(fetchingSucceeded(item));
+    } catch (error) {
+      return dispatch(fetchingFailed());
+    }
+  };
+
+
 
