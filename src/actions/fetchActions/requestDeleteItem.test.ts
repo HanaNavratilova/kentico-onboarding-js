@@ -35,7 +35,7 @@ describe('requestDeleteItem', () => {
 
     const dispatch = jest.fn();
 
-    await requestDeleteItemCreator({fetchDeleteItem: fetch})(id)(dispatch)
+    await requestDeleteItemCreator({fetchDeleteItem: fetch})(id)(dispatch);
 
     expect(dispatch.mock.calls[0][0]).toEqual(expected[0]);
     expect(dispatch.mock.calls[1][0]).toEqual(expected[1]);
