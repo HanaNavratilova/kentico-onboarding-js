@@ -1,17 +1,34 @@
 import { ListItem } from '../models/ListItem';
 
-export const storeItem = (itemText: string): Promise<ListItem> =>
-  fetch('api/v1.0/List', {
-    method: 'POST',
-    body: JSON.stringify({text: itemText}),
-    headers: {'Content-Type': 'application/json'}
-  }).then(response => {
-    if (response.ok) {
-      return response.json();
-    }
+const validateResponse = async (response: Response): Promise<ListItem> => {
+  const responseJson = await response.json();
 
-    throw new Error();
+  if (response.ok) {
+    return responseJson;
+  }
+
+  let errorMessage = '';
+  const error = responseJson.modelState;
+  Object.keys(error).forEach((key) => {
+    errorMessage += error[key][0];
   });
+
+  return Promise.reject(new Error(errorMessage));
+};
+
+export const storeItem = async (itemText: string): Promise<ListItem> => {
+  try {
+    const response = await fetch('api/v1.0/List', {
+      method: 'POST',
+      body: JSON.stringify({text: itemText}),
+      headers: {'Content-Type': 'application/json'}
+    });
+
+    return await validateResponse(response);
+  } catch (error) {
+    throw new Error('Couldn\'t connect to server.');
+  }
+};
 
 
 export const fetchItems = (): Promise <ListItem[]> =>

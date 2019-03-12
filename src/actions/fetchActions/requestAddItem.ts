@@ -11,9 +11,11 @@ const fetchingStarts = (itemText: string): IAction => ({
   }
 });
 
-const fetchingFailed = (): IAction => ({
+const fetchingFailed = (errorMessage: string): IAction => ({
   type: ActionType.FetchAddItemFailed,
-  payload: {}
+  payload: {
+    errorMessage
+  }
 });
 
 export const fetchingSucceeded = (item: ListItem): IAction => ({
@@ -36,7 +38,8 @@ export const requestAddItemCreator = (dependency: IAddItemCreatorDependency) => 
 
       return dispatch(fetchingSucceeded(item));
     } catch (error) {
-      return dispatch(fetchingFailed());
+      console.error(error);
+      return dispatch(fetchingFailed(error.message));
     }
   };
 
