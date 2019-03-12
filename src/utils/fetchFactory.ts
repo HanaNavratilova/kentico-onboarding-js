@@ -31,16 +31,22 @@ export const storeItem = async (itemText: string): Promise<ListItem> => {
 };
 
 
-export const fetchItems = (): Promise <ListItem[]> =>
-  fetch('api/v1.0/List', {method: 'GET'})
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      }
+export const fetchItems = async (): Promise<ListItem[]> => {
+  try {
+    const response = await fetch(
+      'api/v1.0/List',
+      {method: 'GET'}
+    );
 
-      throw new Error();
-    });
+    if (response.ok) {
+      return response.json();
+    }
 
+    return Promise.reject(new Error('This should never happen! Something went really wrong.'));
+  } catch (error) {
+    throw new Error('Couldn\'t connect to server.');
+  }
+};
 
 
 export const deleteItem = (id: Uuid): Promise<void> =>
