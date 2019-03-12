@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { isTextEmpty } from '../utils/isTextEmpty';
 import { SyncLoader } from 'react-spinners';
-import { getItemStatusArray, ItemStatus } from '../reducers/interfaces/ItemProperties';
+import { getItemStatusArray, ItemStatus } from '../reducers/interfaces/ItemStatus';
 
 export interface IAddItemStateProps {
   readonly status: ItemStatus;

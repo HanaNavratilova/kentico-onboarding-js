@@ -1,29 +1,22 @@
 import * as ActionType from '../../actions/ActionTypes';
 import { IAction } from '../../actions/IAction';
-import { ItemProperties, ItemStatus } from '../interfaces/ItemProperties';
+import { ItemStatus } from '../interfaces/ItemStatus';
+import { ItemProperties } from '../../models/ItemProperties';
 
-export const newItem = (state: ItemProperties = {status: ItemStatus.NothingIsHappening, newText: '', errorMessage: ''}, action: IAction): ItemProperties => {
+export const itemProperties = (state: ItemProperties = new ItemProperties(), action: IAction): ItemProperties => {
   switch (action.type) {
     case ActionType.FetchAddItemStarted:
-      return {
+      return new ItemProperties({
         status: ItemStatus.BeingProcessed,
         newText: action.payload.text,
         errorMessage: '',
-      };
+      });
 
     case ActionType.FetchAddItemSucceeded:
-      return {
-        status: ItemStatus.NothingIsHappening,
-        newText: '',
-        errorMessage: '',
-      };
+      return new ItemProperties(); // ItemStatus.NothingIsHappening and empty strings
 
     case ActionType.FetchAddItemFailed:
-      return {
-        status: ItemStatus.SavingFailed,
-        newText: state.newText,
-        errorMessage: action.payload.errorMessage,
-      };
+      return state.with({status: ItemStatus.SavingFailed, errorMessage: action.payload.errorMessage});
 
     default:
       return state;

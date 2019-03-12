@@ -1,12 +1,9 @@
 import * as React from 'react';
-import {
-  getItemStatusArray,
-  ItemProperties,
-  ItemStatus
-} from '../reducers/interfaces/ItemProperties';
+import { ItemStatus } from '../reducers/interfaces/ItemStatus';
 import { createErrorPopup } from '../utils/popups';
 import * as PropTypes from 'prop-types';
 import { getListStatusArray, ListStatus } from '../reducers/interfaces/ListStatus';
+import { ItemProperties } from '../models/ItemProperties';
 
 export interface IPopupsProps {
   readonly newItemStatus: ItemProperties;
@@ -17,11 +14,7 @@ export class Popups extends React.PureComponent<IPopupsProps> {
   static displayName = 'Popups';
 
   static propTypes = {
-    newItemStatus: PropTypes.shape({
-      status: PropTypes.oneOf(getItemStatusArray()).isRequired,
-      errorMessage: PropTypes.string.isRequired,
-      newText: PropTypes.string.isRequired
-    }).isRequired,
+    newItemStatus: PropTypes.instanceOf(ItemProperties).isRequired,
     listStatus: PropTypes.oneOf(getListStatusArray()).isRequired
   };
 
