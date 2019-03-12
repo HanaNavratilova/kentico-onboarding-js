@@ -1,4 +1,3 @@
-import * as fetch from 'isomorphic-fetch';
 import { Dispatch } from 'redux';
 import { IAction } from '../IAction';
 import * as ActionType from '../ActionTypes';
@@ -20,28 +19,19 @@ export const fetchingSucceeded = (id: Uuid): IAction => ({
   }
 });
 
-export const requestDeleteItemCreator = (myFetch: (path: string, options?: RequestInit) => Promise<Response>) => (id: Uuid) => (dispatch: Dispatch): Promise<IAction> => {
-  dispatch(fetchingStarts());
+interface IRequestDeleteItemCreatorDependency {
+  readonly fetchDeleteItem: (id: Uuid) => Promise<void>;
+}
 
-  return myFetch(
-    'api/v1.0/List/' + id,
-    {
-      method: 'DELETE'
-    })
-    .then(response => {
-      if (response.ok) {
-        return;
-      }
+export const requestDeleteItemCreator = (dependency: IRequestDeleteItemCreatorDependency) => (id: Uuid) =>
+  async (dispatch: Dispatch): Promise<IAction> => {
+    dispatch(fetchingStarts());
 
-      throw new Error();
-    })
-    .then(_ => dispatch(fetchingSucceeded(id)))
-    .catch(_ => {
-        dispatch(fetchingFailed());
-        throw new Error();
-      }
-    );
-};
+    try {
+      await dependency.fetchDeleteItem(id);
 
-export const requestDeleteItem = requestDeleteItemCreator(fetch);
-
+      return dispatch(fetchingSucceeded(id));
+    } catch (error) {
+      return dispatch(fetchingFailed());
+    }
+  };

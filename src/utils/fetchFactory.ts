@@ -23,3 +23,17 @@ export const fetchItems = (): Promise <ListItem[]> =>
 
       throw new Error();
     });
+
+
+
+export const deleteItem = (id: Uuid): Promise<void> =>
+  fetch('api/v1.0/List/' + id,
+    {
+      method: 'DELETE'
+    }).then(response => {
+    if (response.ok) {
+      return;
+    }
+
+    throw new Error();
+  });

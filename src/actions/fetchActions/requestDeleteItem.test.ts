@@ -12,13 +12,11 @@ describe('requestDeleteItem', () => {
       { type: ActionType.FetchDeleteItemSucceeded, payload: { id } }
     ];
 
-    const response = { ok: true };
-
-    const fetch = () => Promise.resolve( response );
+    const fetch = () => Promise.resolve();
 
     const dispatch = jest.fn();
 
-    await requestDeleteItemCreator(fetch as any)(id)(dispatch);
+    await requestDeleteItemCreator({fetchDeleteItem: fetch})(id)(dispatch);
 
     expect(dispatch.mock.calls[0][0]).toEqual(expected[0]);
     expect(dispatch.mock.calls[1][0]).toEqual(expected[1]);
@@ -33,41 +31,12 @@ describe('requestDeleteItem', () => {
       { type: ActionType.FetchDeleteItemFailed, payload: {} }
     ];
 
-    const response = { ok: false };
-
-    const fetch = () => Promise.resolve( response );
+    const fetch = () => Promise.reject( );
 
     const dispatch = jest.fn();
 
-    let errorWasThrown = false;
+    await requestDeleteItemCreator({fetchDeleteItem: fetch})(id)(dispatch)
 
-    await requestDeleteItemCreator(fetch as any)(id)(dispatch)
-      .catch(_ => {errorWasThrown = true; });
-
-    expect(errorWasThrown).toBeTruthy();
-    expect(dispatch.mock.calls[0][0]).toEqual(expected[0]);
-    expect(dispatch.mock.calls[1][0]).toEqual(expected[1]);
-
-  });
-
-  it('dispatches fetchingStarts and catch an error, dispatches fetchingFailed and throw an error', async () => {
-    const id = '3970a0db-c877-49e1-b4d0-75e931384289';
-
-    const expected: IAction[] = [
-      { type: ActionType.FetchDeleteItemStarted, payload: {}},
-      { type: ActionType.FetchDeleteItemFailed, payload: {} }
-    ];
-
-    const fetch = () => new Promise( () => { throw new Error(); });
-
-    const dispatch = jest.fn();
-
-    let errorWasThrown = false;
-
-    await requestDeleteItemCreator(fetch as any)(id)(dispatch)
-      .catch(_ => {errorWasThrown = true; });
-
-    expect(errorWasThrown).toBeTruthy();
     expect(dispatch.mock.calls[0][0]).toEqual(expected[0]);
     expect(dispatch.mock.calls[1][0]).toEqual(expected[1]);
 
