@@ -26,12 +26,14 @@ describe('requestDeleteItem', () => {
   it('dispatches fetchingStarts and after response was not ok, dispatches fetchingFailed and throw an error', async () => {
     const id = '3970a0db-c877-49e1-b4d0-75e931384289';
 
+    const errorMessage = 'failed';
+
     const expected: IAction[] = [
       { type: ActionType.FetchDeleteItemStarted, payload: {id} },
-      { type: ActionType.FetchDeleteItemFailed, payload: {id} }
+      { type: ActionType.FetchDeleteItemFailed, payload: {id, errorMessage} }
     ];
 
-    const fetch = () => Promise.reject( );
+    const fetch = () => Promise.reject(new Error(errorMessage));
 
     const dispatch = jest.fn();
 
