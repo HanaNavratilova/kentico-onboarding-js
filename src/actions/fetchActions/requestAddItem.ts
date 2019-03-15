@@ -38,7 +38,6 @@ export const requestAddItemCreator = (dependency: IAddItemCreatorDependency) => 
 
       return dispatch(fetchingSucceeded(item));
     } catch (error) {
-      console.error(error);
       return dispatch(fetchingFailed(error.message));
     }
   };
