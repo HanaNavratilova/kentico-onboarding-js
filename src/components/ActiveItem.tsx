@@ -20,7 +20,6 @@ interface IActiveItemProps {
 interface IActiveItemState {
   readonly text: string;
   readonly isProcessingRequest: boolean;
-  readonly deletionFailed: boolean;
 }
 
 export class ActiveItem extends React.PureComponent<IActiveItemProps, IActiveItemState> {
@@ -37,11 +36,10 @@ export class ActiveItem extends React.PureComponent<IActiveItemProps, IActiveIte
   state = {
     text: this.props.item.text,
     isProcessingRequest: false,
-    deletionFailed: false,
   };
 
   _saveInputValue = () => {
-    this.setState(() => ({isProcessingRequest: true, deletionFailed: false}));
+    this.setState(() => ({isProcessingRequest: true}));
     this.props.onSaveItem(this.state.text);
   };
 
@@ -51,11 +49,11 @@ export class ActiveItem extends React.PureComponent<IActiveItemProps, IActiveIte
   };
 
   _deleteItem = () => {
-    this.setState(() => ({isProcessingRequest: true, deletionFailed: false }));
+    this.setState(() => ({isProcessingRequest: true }));
     this.props.onDeleteItem()
       .catch(() => {
         createErrorPopup('Couldn\'t delete item.');
-        this.setState(() => ({isProcessingRequest: false, deletionFailed: true}));
+        this.setState(() => ({isProcessingRequest: false}));
       });
   };
 
@@ -63,7 +61,8 @@ export class ActiveItem extends React.PureComponent<IActiveItemProps, IActiveIte
     const textIsValid = isTextEmpty(this.state.text);
     const title = textIsValid ? undefined : 'You can\'t save an empty input :(';
     const savingFailed = this.props.item.properties.status === ItemStatus.SavingFailed;
-    const errorMessage = this.state.deletionFailed
+    const deletionFailed = this.props.item.properties.status === ItemStatus.DeletionFailed;
+    const errorMessage = deletionFailed
       ? 'Deletion failed.'
       : (
         savingFailed
@@ -92,7 +91,7 @@ export class ActiveItem extends React.PureComponent<IActiveItemProps, IActiveIte
                 className="btn btn-info"
                 type="submit"
                 onClick={this._saveInputValue}
-                disabled={!textIsValid || this.state.isProcessingRequest || this.state.deletionFailed}
+                disabled={!textIsValid || this.state.isProcessingRequest || deletionFailed}
                 title={title}
               >
                 Save
@@ -120,7 +119,7 @@ export class ActiveItem extends React.PureComponent<IActiveItemProps, IActiveIte
               <SyncLoader color={color} size={10}/>
             </div>
           }
-          {(this.state.deletionFailed || savingFailed) &&
+          {(deletionFailed || savingFailed) &&
           <span className="py-1 pt-2 font-weight-bold text-danger">
             {errorMessage}
           </span>
