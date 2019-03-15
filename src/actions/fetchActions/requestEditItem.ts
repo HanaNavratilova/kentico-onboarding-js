@@ -10,10 +10,11 @@ const fetchingStarts = (id: Uuid): IAction => ({
   }
 });
 
-const fetchingFailed = (id: Uuid): IAction => ({
+const fetchingFailed = (id: Uuid, errorMessage: string): IAction => ({
   type: ActionType.FetchEditItemFailed,
   payload: {
-    id
+    id,
+    errorMessage
   }
 });
 
@@ -38,7 +39,7 @@ export const requestEditItemCreator = (dependency: IRequestEditItemCreatorDepend
 
       return dispatch(fetchingSucceeded(item));
     } catch (error) {
-      return dispatch(fetchingFailed(id));
+      return dispatch(fetchingFailed(id, error.message));
     }
   };
 
