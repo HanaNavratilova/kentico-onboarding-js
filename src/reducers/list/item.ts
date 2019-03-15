@@ -18,7 +18,7 @@ export const item = (state: ListItem = new ListItem(), action: IAction): ListIte
       });
 
     case ActionType.ToggleItem:
-      return state.with({isActive: !state.isActive});
+      return state.with({isActive: !state.isActive, properties: itemProperties(state.properties, action)});
 
     case ActionType.FetchEditItemSucceeded: {
       // return state.with({text: action.payload.text, isActive: false, lastUpdateTime: getLocalDateTime(action.payload.lastUpdateTime)});
@@ -31,7 +31,9 @@ export const item = (state: ListItem = new ListItem(), action: IAction): ListIte
     }
 
     case ActionType.FetchDeleteItemStarted:
-    case ActionType.FetchEditItemStarted: {
+    case ActionType.FetchDeleteItemFailed:
+    case ActionType.FetchEditItemStarted:
+    case ActionType.FetchEditItemFailed: {
       return state.with({
         properties: itemProperties(state.properties, action)
       });

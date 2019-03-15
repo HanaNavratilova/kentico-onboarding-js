@@ -14,6 +14,7 @@ export const itemProperties = (state: ItemProperties = new ItemProperties(), act
       });
 
     case ActionType.FetchEditItemSucceeded:
+    case ActionType.ToggleItem:
       return new ItemProperties(); // ItemStatus.NothingIsHappening and empty strings
 
     case ActionType.FetchDeleteItemFailed:
