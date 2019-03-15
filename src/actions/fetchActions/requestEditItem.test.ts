@@ -6,6 +6,7 @@ import { IAction } from '../IAction';
 
 describe('requestEditItem', () => {
   it('dispatches fetchingStarts and after response was ok, dispatches fetchingSucceeded with item as its parameter', async () => {
+    const id = '3970a0db-c877-49e1-b4d0-75e931384289';
 
     const item = new ListItem({
       id: '3970a0db-c877-49e1-b4d0-75e931384289',
@@ -16,17 +17,15 @@ describe('requestEditItem', () => {
     });
 
     const expected: IAction[] = [
-      { type: ActionType.FetchEditItemStarted, payload: {}},
+      { type: ActionType.FetchEditItemStarted, payload: {id}},
       { type: ActionType.FetchEditItemSucceeded, payload: { ...item } }
     ];
 
-    const response = { json: () => Promise.resolve(item), ok: true };
-
-    const fetch = () => Promise.resolve( response );
+    const fetch = () => Promise.resolve( item );
 
     const dispatch = jest.fn();
 
-    await requestEditItemCreator(fetch as any)('3970a0db-c877-49e1-b4d0-75e931384289', JSON.stringify({ text: 'editedText' }))(dispatch);
+    await requestEditItemCreator({fetchEditItem: fetch})(id, 'editedText')(dispatch);
 
     expect(dispatch.mock.calls[0][0]).toEqual(expected[0]);
     expect(dispatch.mock.calls[1][0]).toEqual(expected[1]);
@@ -34,46 +33,23 @@ describe('requestEditItem', () => {
   });
 
   it('dispatches fetchingStarts and after response was not ok, dispatches fetchingFailed and throw an error', async () => {
+    const id = '3970a0db-c877-49e1-b4d0-75e931384289';
+
+    const errorMessage = 'failed';
+
     const expected: IAction[] = [
-      { type: ActionType.FetchEditItemStarted, payload: {}},
-      { type: ActionType.FetchEditItemFailed, payload: {} }
+      { type: ActionType.FetchEditItemStarted, payload: {id}},
+      { type: ActionType.FetchEditItemFailed, payload: {id, errorMessage} }
     ];
 
-    const response = { ok: false };
-
-    const fetch = () => Promise.resolve( response );
+    const fetch = () => Promise.reject(new Error(errorMessage));
 
     const dispatch = jest.fn();
 
-    let errorWasThrown = false;
+    await requestEditItemCreator({fetchEditItem: fetch})(id, 'editedText')(dispatch);
 
-    await requestEditItemCreator(fetch as any)('3970a0db-c877-49e1-b4d0-75e931384289', JSON.stringify({ text: 'editedText' }))(dispatch)
-      .catch(_ => {errorWasThrown = true; });
-
-    expect(errorWasThrown).toBeTruthy();
     expect(dispatch.mock.calls[0][0]).toEqual(expected[0]);
     expect(dispatch.mock.calls[1][0]).toEqual(expected[1]);
-
   });
 
-  it('dispatches fetchingStarts and catch an error, dispatches fetchingFailed and throw an error', async () => {
-    const expected: IAction[] = [
-      { type: ActionType.FetchEditItemStarted, payload: {}},
-      { type: ActionType.FetchEditItemFailed, payload: {} }
-    ];
-
-    const fetch = () => new Promise( () => { throw new Error(); });
-
-    const dispatch = jest.fn();
-
-    let errorWasThrown = false;
-
-    await requestEditItemCreator(fetch as any)('3970a0db-c877-49e1-b4d0-75e931384289', JSON.stringify({ text: 'editedText' }))(dispatch)
-      .catch(_ => {errorWasThrown = true; });
-
-    expect(errorWasThrown).toBeTruthy();
-    expect(dispatch.mock.calls[0][0]).toEqual(expected[0]);
-    expect(dispatch.mock.calls[1][0]).toEqual(expected[1]);
-
-  });
 });
