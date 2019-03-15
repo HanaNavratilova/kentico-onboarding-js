@@ -6,13 +6,12 @@ import {
   IItemDispatchProps,
   IItemProps
 } from '../components/Item';
-import { requestDeleteItem, toggleItem } from '../actions/ListActions';
+import { requestDeleteItem, requestSaveItem, toggleItem } from '../actions/ListActions';
 import { IAppState } from '../reducers/interfaces/IAppState';
 import { getTimeFrom } from '../utils/getTimeFrom';
 import { ListSorting } from '../constants/ListSorting';
 import { ThunkDispatch } from 'redux-thunk';
 import { IAction } from '../actions/IAction';
-import { requestSaveItem } from '../actions/fetchActions/requestEditItem';
 
 interface IItemContainerProps {
   id: Uuid;

@@ -13,7 +13,7 @@ export interface IItemStateProps {
 }
 
 export interface IItemDispatchProps {
-  readonly onSaveItem: (text: string) => Promise<IAction>;
+  readonly onSaveItem: (text: string) => void;
   readonly onDeleteItem: () => Promise<IAction>;
   readonly onToggleItem: () => void;
 }

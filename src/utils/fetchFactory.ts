@@ -60,3 +60,20 @@ export const deleteItem = (id: Uuid): Promise<void> =>
 
     throw new Error();
   });
+
+export const editItem = (id: Uuid, text: string): Promise<ListItem> =>
+  fetch(
+    'api/v1.0/List/' + id,
+    {
+      method: 'PUT',
+      body: JSON.stringify({text}),
+      headers: {'Content-Type': 'application/json'}
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      }
+
+      throw new Error();
+    });
+

@@ -1,4 +1,3 @@
-import * as fetch from 'isomorphic-fetch';
 import { Dispatch } from 'redux';
 import { IAction } from '../IAction';
 import * as ActionType from '../ActionTypes';
@@ -25,32 +24,21 @@ export const fetchingSucceeded = (item: ListItem): IAction => ({
   }
 });
 
-export const requestEditItemCreator = (myFetch: (path: string, options?: RequestInit) => Promise<Response>) => (id: string, body: string) => (dispatch: Dispatch): Promise<IAction> => {
-  dispatch(fetchingStarts(id));
 
-  return myFetch(
-    'api/v1.0/List/' + id,
-    {
-      method: 'PUT',
-      body,
-      headers: {'Content-Type': 'application/json'}
-    })
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      }
+interface IRequestEditItemCreatorDependency {
+  readonly fetchEditItem: (id: Uuid, text: string) => Promise<ListItem>;
+}
 
-      throw new Error();
-    })
-    .then(item => dispatch(fetchingSucceeded(item)))
-    .catch(_ => {
-        dispatch(fetchingFailed(id));
-        throw new Error();
-      }
-    );
-};
+export const requestEditItemCreator = (dependency: IRequestEditItemCreatorDependency) => (id: Uuid, text: string) =>
+  async (dispatch: Dispatch): Promise<IAction> => {
+    dispatch(fetchingStarts(id));
 
-export const requestSaveItem = (id: string, text: string) => requestEditItemCreator(fetch)(id, JSON.stringify({ text }));
+    try {
+      const item = await dependency.fetchEditItem(id, text);
 
-// export const requestToggleItem = (id: string) => requestEditItemCreator(fetch)(id, {text: 'somupravil', isActive: false });
+      return dispatch(fetchingSucceeded(item));
+    } catch (error) {
+      return dispatch(fetchingFailed(id));
+    }
+  };
 
