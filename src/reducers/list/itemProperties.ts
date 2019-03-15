@@ -17,9 +17,11 @@ export const itemProperties = (state: ItemProperties = new ItemProperties(), act
     case ActionType.ToggleItem:
       return new ItemProperties(); // ItemStatus.NothingIsHappening and empty strings
 
-    case ActionType.FetchDeleteItemFailed:
     case ActionType.FetchEditItemFailed:
       return state.with({status: ItemStatus.SavingFailed, errorMessage: action.payload.errorMessage});
+
+    case ActionType.FetchDeleteItemFailed:
+      return state.with({status: ItemStatus.DeletionFailed, errorMessage: action.payload.errorMessage});
 
     default:
       return state;
