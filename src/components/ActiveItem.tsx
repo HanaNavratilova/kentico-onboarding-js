@@ -3,8 +3,6 @@ import * as PropTypes from 'prop-types';
 
 import { IListItem, ListItem } from '../models/ListItem';
 import { isTextEmpty } from '../utils/isTextEmpty';
-import { IAction } from '../actions/IAction';
-import { createErrorPopup } from '../utils/popups';
 import { SyncLoader } from 'react-spinners';
 import { color } from '../constants/color';
 import { ItemStatus } from '../reducers/interfaces/ItemStatus';
@@ -14,7 +12,7 @@ interface IActiveItemProps {
   readonly timeToRender: string;
   readonly onSaveItem: (text: string) => void;
   readonly onCancelItem: () => void;
-  readonly onDeleteItem: () => Promise<IAction>;
+  readonly onDeleteItem: () => void;
 }
 
 interface IActiveItemState {
@@ -46,12 +44,8 @@ export class ActiveItem extends React.PureComponent<IActiveItemProps, IActiveIte
     this.setState(() => ({text}));
   };
 
-  _deleteItem = () => {
-    this.props.onDeleteItem()
-      .catch(() => {
-        createErrorPopup('Couldn\'t delete item.');
-      });
-  };
+  _deleteItem = () =>
+    this.props.onDeleteItem();
 
   render(): JSX.Element {
     const textIsValid = isTextEmpty(this.state.text);
