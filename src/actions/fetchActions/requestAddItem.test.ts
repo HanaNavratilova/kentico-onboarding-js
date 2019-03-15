@@ -36,12 +36,14 @@ describe('requestAddItem', () => {
   it('dispatches fetchingStarts and after response was not ok, dispatches fetchingFailed and throw an error', async () => {
     const text = 'newItemText';
 
+    const errorMessage = 'failed';
+
     const expected: IAction[] = [
       { type: ActionType.FetchAddItemStarted, payload: { text } },
-      { type: ActionType.FetchAddItemFailed, payload: {} }
+      { type: ActionType.FetchAddItemFailed, payload: { errorMessage } }
     ];
 
-    const fetch = () => Promise.reject();
+    const fetch = () => Promise.reject(new Error(errorMessage));
 
     const dispatch = jest.fn();
 
