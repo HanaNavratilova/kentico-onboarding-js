@@ -8,7 +8,7 @@ describe('requestDeleteItem', () => {
     const id = '3970a0db-c877-49e1-b4d0-75e931384289';
 
     const expected: IAction[] = [
-      { type: ActionType.FetchDeleteItemStarted, payload: {} },
+      { type: ActionType.FetchDeleteItemStarted, payload: { id } },
       { type: ActionType.FetchDeleteItemSucceeded, payload: { id } }
     ];
 
@@ -27,8 +27,8 @@ describe('requestDeleteItem', () => {
     const id = '3970a0db-c877-49e1-b4d0-75e931384289';
 
     const expected: IAction[] = [
-      { type: ActionType.FetchDeleteItemStarted, payload: {} },
-      { type: ActionType.FetchDeleteItemFailed, payload: {} }
+      { type: ActionType.FetchDeleteItemStarted, payload: {id} },
+      { type: ActionType.FetchDeleteItemFailed, payload: {id} }
     ];
 
     const fetch = () => Promise.reject( );
