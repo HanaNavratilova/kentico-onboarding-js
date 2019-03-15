@@ -48,18 +48,30 @@ export const fetchItems = async (): Promise<ListItem[]> => {
   }
 };
 
+export const deleteItem = async (id: Uuid): Promise<void> => {
+  try {
+    const response = await fetch('api/v1.0/List/' + id,
+      {
+        method: 'DELETE'
+      });
 
-export const deleteItem = (id: Uuid): Promise<void> =>
-  fetch('api/v1.0/List/' + id,
-    {
-      method: 'DELETE'
-    }).then(response => {
     if (response.ok) {
       return;
     }
 
-    throw new Error();
-  });
+    const responseJson = await response.json();
+
+    let errorMessage = '';
+    const error = responseJson.modelState;
+    Object.keys(error).forEach((key) => {
+      errorMessage += error[key][0];
+    });
+
+    return Promise.reject(new Error(errorMessage));
+  } catch (error) {
+    throw new Error('Couldn\'t connect to server.');
+  }
+};
 
 export const editItem = (id: Uuid, text: string): Promise<ListItem> =>
   fetch(

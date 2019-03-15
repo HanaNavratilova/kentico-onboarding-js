@@ -9,10 +9,11 @@ const fetchingStarts = (id: Uuid): IAction => ({
   }
 });
 
-const fetchingFailed = (id: Uuid): IAction => ({
+const fetchingFailed = (id: Uuid, errorMessage: string): IAction => ({
   type: ActionType.FetchDeleteItemFailed,
   payload: {
-    id
+    id,
+    errorMessage
   }
 });
 
@@ -36,6 +37,6 @@ export const requestDeleteItemCreator = (dependency: IRequestDeleteItemCreatorDe
 
       return dispatch(fetchingSucceeded(id));
     } catch (error) {
-      return dispatch(fetchingFailed(id));
+      return dispatch(fetchingFailed(id, error.message));
     }
   };
