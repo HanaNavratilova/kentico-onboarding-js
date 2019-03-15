@@ -2,14 +2,18 @@ import { Dispatch } from 'redux';
 import { IAction } from '../IAction';
 import * as ActionType from '../ActionTypes';
 
-const fetchingStarts = (): IAction => ({
+const fetchingStarts = (id: Uuid): IAction => ({
   type: ActionType.FetchDeleteItemStarted,
-  payload: {}
+  payload: {
+    id
+  }
 });
 
-const fetchingFailed = (): IAction => ({
+const fetchingFailed = (id: Uuid): IAction => ({
   type: ActionType.FetchDeleteItemFailed,
-  payload: {}
+  payload: {
+    id
+  }
 });
 
 export const fetchingSucceeded = (id: Uuid): IAction => ({
@@ -25,13 +29,13 @@ interface IRequestDeleteItemCreatorDependency {
 
 export const requestDeleteItemCreator = (dependency: IRequestDeleteItemCreatorDependency) => (id: Uuid) =>
   async (dispatch: Dispatch): Promise<IAction> => {
-    dispatch(fetchingStarts());
+    dispatch(fetchingStarts(id));
 
     try {
       await dependency.fetchDeleteItem(id);
 
       return dispatch(fetchingSucceeded(id));
     } catch (error) {
-      return dispatch(fetchingFailed());
+      return dispatch(fetchingFailed(id));
     }
   };

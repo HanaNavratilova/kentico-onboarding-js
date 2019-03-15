@@ -4,14 +4,18 @@ import { IAction } from '../IAction';
 import * as ActionType from '../ActionTypes';
 import { ListItem } from '../../models/ListItem';
 
-const fetchingStarts = (): IAction => ({
+const fetchingStarts = (id: Uuid): IAction => ({
   type: ActionType.FetchEditItemStarted,
-  payload: {}
+  payload: {
+    id
+  }
 });
 
-const fetchingFailed = (): IAction => ({
+const fetchingFailed = (id: Uuid): IAction => ({
   type: ActionType.FetchEditItemFailed,
-  payload: {}
+  payload: {
+    id
+  }
 });
 
 export const fetchingSucceeded = (item: ListItem): IAction => ({
@@ -22,7 +26,7 @@ export const fetchingSucceeded = (item: ListItem): IAction => ({
 });
 
 export const requestEditItemCreator = (myFetch: (path: string, options?: RequestInit) => Promise<Response>) => (id: string, body: string) => (dispatch: Dispatch): Promise<IAction> => {
-  dispatch(fetchingStarts());
+  dispatch(fetchingStarts(id));
 
   return myFetch(
     'api/v1.0/List/' + id,
@@ -40,7 +44,7 @@ export const requestEditItemCreator = (myFetch: (path: string, options?: Request
     })
     .then(item => dispatch(fetchingSucceeded(item)))
     .catch(_ => {
-        dispatch(fetchingFailed());
+        dispatch(fetchingFailed(id));
         throw new Error();
       }
     );

@@ -1,5 +1,6 @@
 import { getKeys } from './getKeys';
 import { IListItem } from '../models/ListItem';
+import { ItemProperties } from '../models/ItemProperties';
 
 const createListItem = (id: Uuid, text: string): IListItem  => {
   return {
@@ -8,6 +9,7 @@ const createListItem = (id: Uuid, text: string): IListItem  => {
     isActive: false,
     creationTime: '',
     lastUpdateTime: '',
+    properties: new ItemProperties()
   };
 };
 
